@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DANY Homepage — Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#101D33; --navy-2:#17284A; --night:#0A1322; --ivory:#F7F5EF; --gold:#B89A5A; --gold-2:#D9C48F;
+  --slate:#AEB8C7; --line:rgba(255,255,255,.12);
+  --serif:"Fraunces",Georgia,serif; --sans:"Inter",system-ui,"Segoe UI",sans-serif;
+  --ease:cubic-bezier(.65,0,.35,1); --out:cubic-bezier(.16,1,.3,1);
+  --panel:clamp(340px,31vw,470px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var(--ivory);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+body{background:
+  radial-gradient(1100px 700px at 85% 15%,rgba(34,55,95,.55),transparent 60%),
+  radial-gradient(900px 600px at 10% 100%,rgba(184,154,90,.08),transparent 60%),var(--night)}
+
+/* ---------- layout ---------- */
+.deck{position:fixed;inset:0;display:grid;grid-template-columns:var(--panel) 1fr;grid-template-rows:1fr 76px}
+.deck.wide{grid-template-columns:0 1fr}
+.panel{position:relative;grid-row:1;padding:clamp(28px,4vh,48px) clamp(24px,2.6vw,44px);display:flex;flex-direction:column;overflow:hidden;transition:opacity .5s}
+.deck.wide .panel{opacity:0;pointer-events:none}
+.brand{display:flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--slate)}
+.brand .mk{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--gold);display:grid;place-items:center;font-family:var(--serif);font-size:10.5px;letter-spacing:.06em;color:var(--ivory)}
+.copy{margin-top:auto;margin-bottom:auto;padding:28px 0}
+.copy>*{opacity:0;transform:translateY(18px)}
+.copy.in>*{opacity:1;transform:none;transition:opacity .7s var(--out),transform .7s var(--out)}
+.copy.in>*:nth-child(2){transition-delay:.07s}.copy.in>*:nth-child(3){transition-delay:.14s}.copy.in>*:nth-child(4){transition-delay:.21s}.copy.in>*:nth-child(5){transition-delay:.28s}.copy.in>*:nth-child(6){transition-delay:.35s}
+.kicker{display:flex;align-items:center;gap:12px;font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.kicker .num{font-family:var(--serif);font-weight:300;font-size:44px;letter-spacing:0;line-height:1;color:var(--gold)}
+h1.title{font-family:var(--serif);font-weight:400;font-size:clamp(30px,2.7vw,46px);line-height:1.06;letter-spacing:-.015em;margin:16px 0 14px}
+h1.title em{color:var(--gold);font-style:italic}
+.desc{font-size:clamp(15px,1.05vw,17px);line-height:1.65;color:#C9D1DC;margin:0}
+.points{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:11px}
+.points li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:14.5px;line-height:1.5;color:#DDE3EA}
+.points li::before{content:"";width:14px;height:14px;margin-top:4px;border-radius:50%;border:1.5px solid var(--gold);background:radial-gradient(circle,var(--gold) 34%,transparent 40%)}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+.compare div{border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.45;color:#C9D1DC}
+.compare b{display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px}
+.compare .b4 b{color:#E8A87C}.compare .af b{color:var(--gold)}
+.compare .af{border-color:rgba(184,154,90,.45);background:rgba(184,154,90,.07)}
+.try{display:inline-flex;align-items:center;gap:10px;margin-top:24px;font-size:13.5px;color:var(--slate)}
+.try kbd{font-family:var(--sans);font-size:11.5px;border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--ivory)}
+
+/* ---------- stage + camera ---------- */
+.stage{position:relative;grid-row:1;overflow:hidden;margin:18px 18px 0 0;border-radius:24px;transition:margin .6s var(--ease)}
+.deck.wide .stage{margin:18px 18px 0 18px}
+#cam{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+#cam.anim{transition:transform var(--dur,1s) var(--ease)}
+.frame{position:relative;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 50px 120px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08);transition:width .9s var(--ease),height .9s var(--ease),border-radius .9s var(--ease)}
+.chrome{height:40px;background:#E9E6DE;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid #D8D3C6;transition:height .6s var(--ease)}
+.chrome i{width:12px;height:12px;border-radius:50%;background:#D3CEC2}
+.chrome i:nth-child(1){background:#E0796B}.chrome i:nth-child(2){background:#E4B95A}.chrome i:nth-child(3){background:#78B66B}
+.chrome .url{flex:1;max-width:520px;margin:0 auto;height:26px;border-radius:8px;background:#fff;color:#5A6577;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px}
+.chrome .url::before{content:"🔒";font-size:10px;opacity:.6}
+.frame.phone{border-radius:46px;border:12px solid #0E1626}
+.frame.phone .chrome{height:34px;background:#0E1626;border:0}
+.frame.phone .chrome i,.frame.phone .chrome .url{display:none}
+iframe{display:block;border:0;background:#fff}
+.frame{transition:width .9s var(--ease),height .9s var(--ease),border-radius .9s var(--ease),opacity .6s,filter .6s}
+.frame.dim{opacity:.06;filter:blur(3px) saturate(.4);pointer-events:none}
+/* highlight ring (lives inside camera so it scales with the page) */
+#ring{position:absolute;pointer-events:none;border-radius:18px;opacity:0;transition:opacity .4s,left .6s var(--ease),top .6s var(--ease),width .6s var(--ease),height .6s var(--ease)}
+#ring.on{opacity:1}
+#ring::before{content:"";position:absolute;inset:0;border-radius:inherit;border:3px solid var(--gold);box-shadow:0 0 0 6px rgba(184,154,90,.25)}
+#ring::after{content:"";position:absolute;inset:-3px;border-radius:inherit;border:3px solid var(--gold);animation:pulse 2s var(--out) infinite}
+@keyframes pulse{0%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(1.06)}}
+#ring .lbl{position:absolute;left:-3px;bottom:calc(100% + 10px);white-space:nowrap;background:var(--gold);color:var(--navy);font-weight:700;font-size:var(--lfs,14px);padding:.45em .8em;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#ring.below .lbl{bottom:auto;top:calc(100% + 10px)}
+
+/* alt stage content (title / before / close) */
+.alt{position:absolute;inset:0;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .6s}
+.alt.on{opacity:1;pointer-events:auto}
+.hero-title{text-align:center;max-width:980px;padding:0 24px}
+.hero-title .eb{font-size:12.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);display:inline-flex;gap:14px;align-items:center}
+.hero-title .eb::before,.hero-title .eb::after{content:"";width:46px;height:1px;background:var(--gold)}
+.hero-title h2{font-family:var(--serif);font-weight:300;font-size:clamp(46px,6.4vw,108px);line-height:1;letter-spacing:-.025em;margin:22px 0 22px}
+.hero-title h2 em{color:var(--gold);font-style:italic}
+.hero-title p{color:#C9D1DC;font-size:18px;line-height:1.6;max-width:640px;margin:0 auto}
+.agenda{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:30px}
+.agenda span{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px;color:#C9D1DC;background:rgba(255,255,255,.03)}
+.startbtn{margin-top:34px;display:inline-flex;align-items:center;gap:12px;height:54px;padding:0 26px;border-radius:999px;border:0;background:var(--gold);color:var(--navy);font-weight:700;font-size:16px;transition:transform .2s var(--out),box-shadow .2s}
+.startbtn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(184,154,90,.35)}
+/* before schematic */
+.before{width:min(860px,92%);display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:center}
+.old{background:#fff;border-radius:12px;overflow:hidden;height:min(520px,62vh);font-family:Arial,sans-serif;color:#1a3f7a;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.5)}
+.old .ob{background:#0d3c7a;height:26px;display:flex;gap:12px;align-items:center;padding:0 12px;color:#fff;font-size:10px;font-weight:700}
+.old .oh{display:flex;align-items:center;justify-content:space-between;padding:12px 14px}.old .oh b{font-size:26px}
+.old .ohero{height:120px;background:#d5dbe3;display:flex;justify-content:flex-end;align-items:center;padding-right:18px}
+.old .ohero span{background:#fff;padding:10px 12px;font-weight:800;font-size:13px;max-width:170px;line-height:1.2}
+.old .o3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 14px}.old .o3 div{background:#2f6db5;height:30px;color:#fff;font-size:10px;font-weight:700;padding:6px}
+.old .ot{padding:4px 14px}.old .ot i{display:block;height:6px;background:#e3e6ea;margin:7px 0;border-radius:2px}.old .ot i:nth-child(3n){width:70%}.old .ot hr{border:0;border-top:1px dashed #9aa;margin:10px 0}
+.old .fade{position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(transparent,#fff)}
+.old .len{position:absolute;right:10px;bottom:10px;background:#B5651D;color:#fff;font-size:11px;font-weight:700;padding:5px 9px;border-radius:999px}
+.issues{display:grid;gap:12px}
+.issue{display:grid;grid-template-columns:30px 1fr;gap:10px;font-size:14px;line-height:1.5;color:#DDE3EA;opacity:0;transform:translateX(20px)}
+.alt.on .issue{opacity:1;transform:none;transition:all .7s var(--out)}
+.alt.on .issue:nth-child(2){transition-delay:.15s}.alt.on .issue:nth-child(3){transition-delay:.3s}.alt.on .issue:nth-child(4){transition-delay:.45s}
+.issue b{width:28px;height:28px;border-radius:50%;background:#B5651D;display:grid;place-items:center;font-size:12px}
+@media (max-width:1100px){.before{grid-template-columns:1fr}.old{height:300px}}
+/* close */
+.close-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:34px;text-align:left}
+.close-grid div{border:1px solid var(--line);border-radius:18px;padding:18px;background:rgba(255,255,255,.03)}
+.close-grid b{display:block;font-family:var(--serif);font-weight:400;font-size:20px;margin:6px 0 6px}
+.close-grid small{color:var(--gold);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}
+.close-grid span{font-size:13.5px;color:#C9D1DC;line-height:1.5}
+@media (max-width:1100px){.close-grid{grid-template-columns:1fr 1fr}}
+
+/* ---------- control bar ---------- */
+.bar{grid-column:1/-1;grid-row:2;display:flex;align-items:center;gap:14px;padding:0 18px}
+.cbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;min-width:46px;padding:0 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ivory);font-size:14px;font-weight:500;transition:background .2s,border-color .2s,transform .12s}
+.cbtn:hover{background:rgba(255,255,255,.09)}
+.cbtn:active{transform:scale(.96)}
+.cbtn[aria-pressed="true"]{border-color:var(--gold);background:rgba(184,154,90,.16);color:var(--gold-2)}
+.cbtn svg{width:19px;height:19px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cbtn.primary{background:var(--gold);border-color:var(--gold);color:var(--navy);font-weight:700}
+.cbtn.primary:hover{background:var(--gold-2)}
+.cbtn:disabled{opacity:.35;pointer-events:none}
+.steps{flex:1;display:flex;gap:4px;align-items:center;min-width:0}
+.steps button{flex:1;height:30px;border:0;background:none;padding:0;position:relative}
+.steps button::before{content:"";position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;border-radius:4px;background:rgba(255,255,255,.14);transition:background .3s}
+.steps button.done::before{background:rgba(184,154,90,.55)}
+.steps button[aria-current="true"]::before{background:var(--gold)}
+.steps button span{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%) translateY(4px);white-space:nowrap;background:var(--navy-2);border:1px solid var(--line);padding:5px 9px;border-radius:8px;font-size:12px;opacity:0;pointer-events:none;transition:all .2s}
+.steps button:hover span,.steps button:focus-visible span{opacity:1;transform:translateX(-50%)}
+.count{font-variant-numeric:tabular-nums;font-size:13px;color:var(--slate);min-width:54px;text-align:center}
+.autobar{position:absolute;left:0;bottom:0;height:2px;background:var(--gold);width:0}
+
+/* overview grid */
+.ov{position:fixed;inset:0;z-index:60;background:rgba(10,19,34,.94);backdrop-filter:blur(10px);padding:40px clamp(20px,4vw,60px);overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .35s}
+.ov.on{opacity:1;pointer-events:auto}
+.ov h2{font-family:var(--serif);font-weight:400;font-size:34px;margin:0 0 6px}
+.ov p{color:var(--slate);margin:0 0 26px}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.ov-grid button{text-align:left;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:18px;padding:18px;min-height:130px;display:flex;flex-direction:column;gap:8px;transition:transform .25s var(--out),border-color .2s,background .2s;opacity:0;transform:scale(.94)}
+.ov.on .ov-grid button{opacity:1;transform:none}
+.ov-grid button:hover{border-color:var(--gold);background:rgba(184,154,90,.08);transform:translateY(-3px)}
+.ov-grid button[aria-current="true"]{border-color:var(--gold)}
+.ov-grid small{color:var(--gold);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}
+.ov-grid b{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.2}
+.ov-grid span{font-size:13px;color:var(--slate)}
+.ov .x{position:absolute;right:24px;top:24px}
+
+.toast{position:fixed;left:50%;top:22px;transform:translate(-50%,-20px);z-index:70;background:var(--navy-2);border:1px solid var(--gold);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:all .35s var(--out);pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:900px){
+  .deck{grid-template-columns:1fr;grid-template-rows:auto 1fr 70px}
+  .panel{grid-row:1;padding:16px 18px 0;max-height:42vh;overflow-y:auto}
+  .copy{padding:10px 0}.points,.compare{display:none}
+  .stage{grid-row:2;margin:10px}
+  .bar{grid-row:3}.steps,.hide-sm{display:none}
+  .brand{display:none}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.001ms!important;animation-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+  <aside class="panel" aria-live="polite">
+    <div class="brand"><span class="mk">DANY</span>Homepage showcase</div>
+    <div class="copy" id="copy"></div>
+  </aside>
+
+  <section class="stage" id="stage" aria-label="Live homepage prototype">
+    <div id="cam">
+      <div class="frame" id="frame">
+        <div class="chrome"><i></i><i></i><i></i><span class="url">defenseassociationofnewyork.org · concept preview</span></div>
+        <iframe id="site" title="DANY homepage prototype" width="1440" height="900"></iframe>
+      </div>
+      <div id="ring"><span class="lbl" id="ringLbl"></span></div>
+    </div>
+
+    <div class="alt" id="altTitle">
+      <div class="hero-title">
+        <div class="eb">Defense Association of New York</div>
+        <h2>The homepage,<br><em>action by action.</em></h2>
+        <p>A guided walkthrough of the reimagined DANY homepage. Every slide is the live prototype — watch each interaction, then try it yourself.</p>
+        <div class="agenda" id="agenda"></div>
+        <button class="startbtn" data-next>Start the walkthrough <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+
+    <div class="alt" id="altBefore">
+      <div class="before">
+        <div class="old" aria-hidden="true">
+          <div class="ob">HOME · ABOUT ▸ · JOIN DANY · INITIATIVES · RESOURCES ▸ · EVENTS ▸ · SPONSORS ▸</div>
+          <div class="oh"><b>DANY</b><span style="font-size:10px;border:1px solid #ccc;padding:4px 16px">search…</span></div>
+          <div class="ohero"><span>EDUCATION, DIVERSITY AND JUSTICE FOR ALL</span></div>
+          <div class="o3"><div>EVENTS</div><div>JOIN US</div><div>MEMBERS</div></div>
+          <div class="ot"><i></i><i></i><i></i><hr><i></i><i></i><i></i><i></i><hr><i></i><i></i><i></i><hr><i></i><i></i><i></i><i></i></div>
+          <div class="fade"></div><span class="len">One long column ↓</span>
+        </div>
+        <div class="issues">
+          <div class="issue"><b>1</b><span>The homepage is a single long column of announcements — scholarship, pro bono, 5K, golf, CLEs and dinners from 2025–2026.</span></div>
+          <div class="issue"><b>2</b><span>The next CLE and key deadlines are buried in body text, below older items.</span></div>
+          <div class="issue"><b>3</b><span>No imagery or visual hierarchy to separate events, membership and publications.</span></div>
+          <div class="issue"><b>4</b><span>Membership dues and levels are hard to compare at a glance.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alt" id="altClose">
+      <div class="hero-title" style="max-width:1100px">
+        <div class="eb">Next steps</div>
+        <h2 style="font-size:clamp(40px,5vw,84px)">From homepage <em>to full site.</em></h2>
+        <p>The same design language and interactions extend to every page.</p>
+        <div class="close-grid">
+          <div><small>Step 1</small><b>Your feedback</b><span>Score each action: keep, refine or drop.</span></div>
+          <div><small>Step 2</small><b>Events & CLE page</b><span>Full calendar, filters, registration and credit claims.</span></div>
+          <div><small>Step 3</small><b>Membership page</b><span>Level finder and a guided join journey.</span></div>
+          <div><small>Step 4</small><b>Real content</b><span>DANY photography, logo, and confirmed dues and dates.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="bar" aria-label="Slideshow controls">
+    <button class="cbtn" id="prev" aria-label="Previous slide"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="cbtn primary" id="next" aria-label="Next slide">Next <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+    <span class="count" id="count">1 / 1</span>
+    <div class="steps" id="steps" role="group" aria-label="Jump to slide"></div>
+    <button class="cbtn" id="zoomBtn" aria-pressed="true" title="Zoom in / out (Z)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M11 8v6M20 20l-4-4"/></svg><span class="hide-sm" id="zoomTxt">Zoomed in</span></button>
+    <button class="cbtn" id="replayBtn" title="Replay action (R)"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg><span class="hide-sm">Replay</span></button>
+    <button class="cbtn" id="tryBtn" aria-pressed="false" title="Try it yourself (T)"><svg viewBox="0 0 24 24"><path d="M9 11V5a2 2 0 0 1 4 0v6M13 10V8a2 2 0 0 1 4 0v5a7 7 0 0 1-7 7h-.5A6.5 6.5 0 0 1 3 13.5V12a2 2 0 0 1 4 0"/></svg><span class="hide-sm">Try it</span></button>
+    <button class="cbtn" id="autoBtn" aria-pressed="false" title="Autoplay (P)" style="position:relative;overflow:hidden"><svg viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg><span class="hide-sm">Autoplay</span><i class="autobar" id="autoBar"></i></button>
+    <button class="cbtn" id="ovBtn" title="All slides (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+    <button class="cbtn hide-sm" id="fsBtn" title="Full screen (F)"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  </nav>
+</div>
+
+<div class="ov" id="ov" role="dialog" aria-label="All slides">
+  <button class="cbtn x" id="ovClose" aria-label="Close">✕</button>
+  <h2>All slides</h2><p>Jump to any action. Press <b>O</b> or Esc to close.</p>
+  <div class="ov-grid" id="ovGrid"></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Every slide script runs under a token; when the presenter moves on, the old script's next await rejects with STALE and it stops.
+const STALE = Symbol('stale'); let LIVE = 0;
+addEventListener('unhandledrejection', e => { if (e.reason === STALE) e.preventDefault(); });
+const sleep = ms => { const t = LIVE; return new Promise((r, j) => setTimeout(() => t === LIVE ? r() : j(STALE), reduce ? Math.min(ms, 60) : ms)); };
+const site = $('#site'), cam = $('#cam'), frame = $('#frame'), stage = $('#stage'), ring = $('#ring');
+const CH = () => frame.querySelector('.chrome').offsetHeight;
+
+/* ---------- bridge to the prototype ---------- */
+let ready = false, seq = 0; const waiting = new Map();
+addEventListener('message', e => {
+  const m = e.data; if (!m || m.ns !== 'dany-show') return;
+  if (m.ready){ ready = true; readyRes && readyRes(); }
+  if (m.key){ m.key.includes('Down') || m.key.includes('Right') ? next() : prev(); }
+  if (m.id && waiting.has(m.id)){ waiting.get(m.id)(m); waiting.delete(m.id); }
+});
+let readyRes; const readyP = new Promise(r => readyRes = r);
+// handshake: keep pinging until the prototype answers (its own "ready" may fire before we listen)
+(function ping(){ if (ready) return; const id = ++seq; waiting.set(id, () => { ready = true; readyRes(); });
+  try { site.contentWindow.postMessage({ns:'dany-show', id, cmd:'ping'}, '*'); } catch(e){}
+  setTimeout(ping, 250); })();
+function send(cmd, extra={}){ const t = LIVE; return new Promise((res0, rej) => { const res = v => t === LIVE ? res0(v) : rej(STALE); const id = ++seq; waiting.set(id, res); site.contentWindow.postMessage({ns:'dany-show', id, cmd, ...extra}, '*'); setTimeout(() => { if (waiting.has(id)){ waiting.delete(id); res({timeout:true}); } }, 6000); }); }
+const act = (name, arg, wait) => send('act', {name, arg, wait});
+const scrollTo = (sel, offset=96) => send('scroll', {sel, offset});
+const rect = async sel => (await send('rect', {sel})).rect;
+
+/* ---------- camera ---------- */
+let size = {w:1440, h:900}, camState = null, zoomed = true, lastRect = null, lastLabel = '';
+function setSize(w, h){ size = {w, h}; site.width = w; site.height = h; site.style.width = w+'px'; site.style.height = h+'px'; frame.style.width = w+'px'; }
+function frameH(){ return size.h + CH(); }
+function fullCam(){ const W = stage.clientWidth, H = stage.clientHeight, fw = size.w, fh = frameH();
+  const s = Math.min(W/fw, H/fh) * .92; return {s, x:(W - fw*s)/2, y:(H - fh*s)/2}; }
+function rectCam(r){ const W = stage.clientWidth, H = stage.clientHeight, f = fullCam(), pad = 70;
+  const s = Math.max(f.s, Math.min(W/(r.w+pad*2), H/(r.h+pad*2), f.s*3.2));
+  const cx = r.x + r.w/2, cy = r.y + CH() + r.h/2;
+  let x = W/2 - cx*s, y = H/2 - cy*s;
+  // keep the frame edge from drifting too far into view
+  x = Math.min(Math.max(x, W - size.w*s - 40), 40); y = Math.min(Math.max(y, H - frameH()*s - 40), 40);
+  if (size.w*s < W) x = (W - size.w*s)/2; if (frameH()*s < H) y = (H - frameH()*s)/2;
+  return {s, x, y}; }
+function applyCam(c, dur=1000){
+  cam.classList.toggle('anim', dur > 0 && !reduce); cam.style.setProperty('--dur', dur+'ms');
+  cam.style.transform = `translate(${c.x}px,${c.y}px) scale(${c.s})`; camState = c;
+  $('#ringLbl').style.setProperty('--lfs', Math.round(14 / c.s) + 'px');
+  return sleep(dur); }
+function showRing(r, label){ if (!r){ ring.classList.remove('on'); return; }
+  const p = 10; Object.assign(ring.style, {left:(r.x-p)+'px', top:(r.y+CH()-p)+'px', width:(r.w+2*p)+'px', height:(r.h+2*p)+'px'});
+  ring.classList.toggle('below', r.y < 70); $('#ringLbl').textContent = label || ''; $('#ringLbl').style.display = label ? '' : 'none'; ring.classList.add('on'); }
+async function focusOn(sel, label, {ringOn=true} = {}){
+  const r = await rect(sel); lastRect = r; lastLabel = label;
+  if (!r) return;
+  if (zoomed) await applyCam(rectCam(r), 1100); else await applyCam(fullCam(), 700);
+  if (ringOn) showRing(r, label);
+}
+async function zoomOutFirst(){ ring.classList.remove('on'); if (camState && Math.abs(camState.s - fullCam().s) > .01) await applyCam(fullCam(), 650); }
+function setZoomed(z){ zoomed = z; $('#zoomBtn').setAttribute('aria-pressed', z); $('#zoomTxt').textContent = z ? 'Zoomed in' : 'Full page';
+  if (lastRect && SL[cur].kind === 'action'){ applyCam(z ? rectCam(lastRect) : fullCam(), 900); } }
+
+/* ---------- slides ---------- */
+const SL = [
+  { kind:'title', nav:'Introduction', alt:'altTitle',
+    copy:{num:'', k:'Concept walkthrough', t:'DANY homepage, <em>reimagined.</em>', d:'This is the live prototype. Each slide focuses on one action — the camera zooms in, the interaction plays, and you can take over at any time.', try:true},
+    run: async () => { setSize(1440,900); await act('reset'); applyCam(fullCam(), 0); frame.classList.add('dim'); } },
+  { kind:'before', nav:'Today', alt:'altBefore',
+    copy:{num:'00', k:'Where we start', t:'Today’s homepage', d:'The current site holds valuable content, but visitors must scroll and read to find what matters now.', points:['Observed on defenseassociationofnewyork.org, 12 Nov 2026','Content is sound — the opportunity is structure, hierarchy and interaction']},
+    run: async () => { frame.classList.add('dim'); } },
+  { kind:'action', nav:'Hero', copy:{num:'01', k:'First impression', t:'A hero with <em>authority.</em>',
+      d:'Full‑bleed New York imagery, a slow cinematic push‑in and a headline that rises line by line.',
+      before:'A grey banner and three blue buttons.', after:'A confident statement with two clear next steps: Join, or Events & CLE.'},
+    run: async () => { await act('replayHero'); await zoomOutFirst(); await sleep(300); await focusOn(['.hero h1','.hero-ctas'], 'Headline + primary actions'); } },
+  { kind:'action', nav:'Navigation', copy:{num:'02', k:'Find your way', t:'Navigation that <em>explains itself.</em>',
+      d:'Six task‑based sections. Dropdowns describe where each link goes; Join and Log in are always one click away.',
+      before:'Arrow menus with unexplained labels.', after:'Descriptive menus and a persistent Join button.'},
+    run: async () => { await act('reset'); await zoomOutFirst(); await focusOn(['header.site .wrap'], 'Main navigation'); await sleep(500);
+      await act('menu','Membership'); await sleep(250); const r = await rect(['nav.main','nav.main li.force-open .dd']); lastRect = r; if (zoomed) await applyCam(rectCam(r), 800); showRing(await rect('nav.main li.force-open .dd'), 'Dropdown opens on hover or focus');
+      await sleep(1800); await act('menu','Events'); await sleep(250); showRing(await rect('nav.main li.force-open .dd'), 'Every section, one step away'); } },
+  { kind:'action', nav:'Quick paths', copy:{num:'03', k:'Task first', t:'Four doors to what <em>members need most.</em>',
+      d:'Right below the hero: Events & CLE, Join DANY, the Defendant, and Pro Bono Honors — each with a one‑line answer.',
+      before:'“Events / Join Us / Members” buttons with no context.', after:'Four described paths with a gold hover accent.'},
+    run: async () => { await act('menu',''); await zoomOutFirst(); await scrollTo('#paths', 260); await focusOn('.paths', 'Hover animates each path'); await act('hoverCycle', '.path'); } },
+  { kind:'action', nav:'Scroll zoom', copy:{num:'04', k:'Signature motion', t:'Sections that <em>zoom in</em> as you arrive.',
+      d:'As each section enters, it scales up from a rounded card to full width; as you leave, it gently recedes. Orientation without scroll‑jacking.',
+      before:'Static text blocks separated by dashed lines.', after:'Each section arrives as a distinct “chapter”.'},
+    run: async () => { await act('stop'); ring.classList.remove('on'); await scrollTo('#paths', 0); await applyCam(fullCam(), 800); lastRect = null;
+      await act('tour', {from:'#paths', to:'#probono', ms:5200}); await sleep(400); await act('tour', {from:'#probono', to:'#events', ms:3600}); } },
+  { kind:'action', nav:'Countdown', copy:{num:'05', k:'Live deadlines', t:'Deadlines you <em>can’t miss.</em>',
+      d:'The Pro Bono Honors deadline becomes a live countdown with the three things participants need to know.',
+      before:'Deadline sits in paragraph 20 of the homepage.', after:'A spotlight section with a ticking countdown and clear actions.'},
+    run: async () => { await zoomOutFirst(); await scrollTo('#probono', 0); await sleep(300); await focusOn(['#probono .count','#probono .chk'], 'Live countdown to 15 Jan 2027'); } },
+  { kind:'action', nav:'Event carousel', copy:{num:'06', k:'Browse events', t:'Events as <em>cards,</em> not paragraphs.',
+      d:'Photo cards with date, format and CLE credit. Filter by type and page through with the arrows.',
+      before:'Events written out as long announcements.', after:'Scannable cards, filters and next/previous controls.'},
+    run: async () => { await zoomOutFirst(); await scrollTo('#events', 70); await focusOn('#events .wrap', 'Filter + next / previous');
+      await sleep(1200); await act('filter','cle'); showRing(await rect('.ev-filter'), 'Filter: CLE only'); await sleep(1800);
+      await act('filter','all'); showRing(await rect('#evNext'), 'Next'); await sleep(600); await act('nextEvents'); await sleep(900); await act('nextEvents'); await sleep(700); showRing(await rect('#track'), 'Cards slide into view'); } },
+  { kind:'action', nav:'Event zoom', copy:{num:'07', k:'Zoom into detail', t:'Click a card — it <em>zooms open.</em>',
+      d:'The card expands from its own position into a full detail view: venue, time, credit, price and registration. Arrow keys move to the next event.',
+      before:'Details mixed into one long page.', after:'Focused details, without losing your place.'},
+    run: async () => { await zoomOutFirst(); await scrollTo('#events', 70); await act('filter','all'); await act('reset'); await scrollTo('#events', 70);
+      const r = await rect('.evc[data-i="0"]'); await applyCam(zoomed ? rectCam(r) : fullCam(), 900); showRing(r, 'Click to open'); await sleep(1300);
+      ring.classList.remove('on'); act('openCard', 0); await applyCam(fullCam(), 750); lastRect = null; await sleep(2200); await act('cardNext'); await sleep(1800); await act('cardNext'); } },
+  { kind:'action', nav:'Membership', copy:{num:'08', k:'Compare & join', t:'Membership, <em>compared at a glance.</em>',
+      d:'Three clear tiers — free, individual and firm — with the published dues and a highlighted offer for the Third and Fourth Departments.',
+      before:'Dues in a paragraph; levels in a long form list.', after:'Side‑by‑side tiers with one action each.'},
+    run: async () => { await act('reset'); await zoomOutFirst(); await scrollTo('#membership', 40); await sleep(300); await focusOn(['.tiers','.free-banner'], 'Published dues, side by side'); await act('hoverCycle', '.tier'); } },
+  { kind:'action', nav:'The Defendant', copy:{num:'09', k:'Publications', t:'The Defendant, <em>on the shelf.</em>',
+      d:'The journal becomes a dimensional cover that turns toward you, beside the latest issue and archive.',
+      before:'A PDF link in body text.', after:'A showcase for DANY’s flagship publication.'},
+    run: async () => { await act('stop'); await zoomOutFirst(); await scrollTo('#defendant', 40); await sleep(300); await focusOn('.mag', 'Cover turns on hover'); await sleep(900); await act('hover', '.mag');
+      await sleep(1600); showRing(await rect('#defendant .res'), 'Latest issue & archive'); lastRect = await rect(['.mag','#defendant .res']); if (zoomed) applyCam(rectCam(lastRect), 900); } },
+  { kind:'action', nav:'Next section', copy:{num:'10', k:'Page navigation', t:'Always know <em>what’s next.</em>',
+      d:'A section rail shows where you are; the Next‑section button names the next stop and jumps to it. At the end it returns you to the top.',
+      before:'One continuous scroll with no wayfinding.', after:'Section rail + “Next section” control (N / P keys).'},
+    run: async () => { await act('stop'); await zoomOutFirst(); await scrollTo('#about', 0); await sleep(400); lastRect = null; await applyCam(fullCam(), 900); showRing(await rect(['#rail','#nextBtn']), 'Section rail + Next section');
+      for (const id of ['#probono','#events','#membership']){ await sleep(1500); await scrollTo(id, 0); await sleep(200); showRing(await rect(['#rail','#nextBtn']), 'Section rail + Next section'); } } },
+  { kind:'action', nav:'Mobile', copy:{num:'11', k:'Every screen', t:'The same experience, <em>in your pocket.</em>',
+      d:'On phones the layout restacks, the menu becomes a full‑screen drawer, and the Next‑section button stays within thumb reach.',
+      before:'Desktop layout squeezed onto a phone.', after:'A layout designed for touch.'},
+    run: async () => { ring.classList.remove('on'); lastRect = null; await act('reset'); frame.classList.add('phone'); setSize(390, 844); await sleep(50); await applyCam(fullCam(), 900);
+      await sleep(1600); await act('drawer'); await sleep(2200); await act('reset'); await sleep(400); await scrollTo('#paths', 0); } },
+  { kind:'close', nav:'Next steps', alt:'altClose',
+    copy:{num:'', k:'Thank you', t:'Let’s refine it <em>together.</em>', d:'Tell us which actions to keep, refine or drop — then we extend the system to Events, Membership and the rest of the site.', try:true},
+    run: async () => { frame.classList.add('dim'); } },
+];
+
+/* ---------- rendering ---------- */
+let cur = 0, runToken = 0, trying = false, auto = false, autoT = null;
+function renderCopy(c){
+  const el = $('#copy'); el.classList.remove('in');
+  el.innerHTML = `<div class="kicker">${c.num?`<span class="num">${c.num}</span>`:''}<span>${c.k}</span></div>
+    <h1 class="title">${c.t}</h1><p class="desc">${c.d}</p>
+    ${c.points?`<ul class="points">${c.points.map(p=>`<li>${p}</li>`).join('')}</ul>`:''}
+    ${c.before?`<div class="compare"><div class="b4"><b>Today</b>${c.before}</div><div class="af"><b>Reimagined</b>${c.after}</div></div>`:''}
+    <div class="try">${c.try || !c.before?'Use <kbd>→</kbd> or a clicker to advance · <kbd>O</kbd> all slides':'<kbd>Z</kbd> zoom · <kbd>R</kbd> replay · <kbd>T</kbd> try it yourself'}</div>`;
+  el.offsetWidth; setTimeout(() => el.classList.add('in'), 30);
+}
+async function go(i){
+  i = Math.max(0, Math.min(SL.length-1, i)); const s = SL[i]; const token = ++runToken; LIVE = token; cur = i;
+  setTry(false); clearTimeout(autoT);
+  renderCopy(s.copy);
+  $$('.alt').forEach(a => a.classList.toggle('on', a.id === s.alt));
+  $('#deck').classList.toggle('wide', s.kind === 'title' || s.kind === 'close');
+  frame.classList.toggle('dim', s.kind !== 'action');
+  if (!(s.nav==='Mobile')){ if (frame.classList.contains('phone')){ frame.classList.remove('phone'); setSize(1440,900); applyCam(fullCam(), 700); } }
+  $('#count').textContent = `${i+1} / ${SL.length}`;
+  $$('#steps button').forEach((b,k) => { b.setAttribute('aria-current', k===i); b.classList.toggle('done', k<i); });
+  $$('#ovGrid button').forEach((b,k) => b.setAttribute('aria-current', k===i));
+  $('#prev').disabled = i===0; $('#next').innerHTML = i===SL.length-1 ? 'Restart <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg>' : 'Next <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>';
+  ['#zoomBtn','#replayBtn','#tryBtn'].forEach(b => $(b).disabled = s.kind !== 'action');
+  history.replaceState(null, '', '#' + (i+1));
+  if (s.kind !== 'action'){ ring.classList.remove('on'); lastRect = null; await applyCam(fullCam(), 800); }
+  await readyP; if (token !== runToken) return;
+  if (s.kind === 'action') await act('stop');
+  try { await s.run(); } catch(e){ if (e !== STALE) console.error(e); return; }
+  if (auto && token === runToken) scheduleAuto();
+}
+const next = () => cur === SL.length-1 ? go(0) : go(cur+1);
+const prev = () => go(cur-1);
+
+/* try-it mode: hand control to the presenter inside the frame */
+function setTry(on){ trying = on; $('#tryBtn').setAttribute('aria-pressed', on);
+  if (on){ act('stop'); ring.classList.remove('on'); applyCam(fullCam(), 700); toast('Your turn — click and scroll inside the page. Press T to go back to the guided view.'); site.focus(); } }
+
+/* autoplay */
+function scheduleAuto(){ clearTimeout(autoT); const ms = SL[cur].kind === 'action' ? 4500 : 6000; const b = $('#autoBar');
+  b.style.transition = 'none'; b.style.width = '0'; b.offsetWidth; b.style.transition = `width ${ms}ms linear`; b.style.width = '100%';
+  autoT = setTimeout(() => { if (auto) next(); }, ms); }
+function setAuto(on){ auto = on; $('#autoBtn').setAttribute('aria-pressed', on); const b = $('#autoBar'); b.style.transition='none'; b.style.width='0';
+  if (on){ toast('Autoplay on'); scheduleAuto(); } else clearTimeout(autoT); }
+
+function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('on'), 2600); }
+
+/* ---------- controls ---------- */
+$('#steps').innerHTML = SL.map((s,i) => `<button aria-label="Slide ${i+1}: ${s.nav}"><span>${s.copy.num ? s.copy.num+' · ' : ''}${s.nav}</span></button>`).join('');
+$$('#steps button').forEach((b,i) => b.onclick = () => go(i));
+$('#ovGrid').innerHTML = SL.map((s,i) => `<button style="transition-delay:${i*25}ms"><small>${s.copy.num ? 'Action '+s.copy.num : s.nav}</small><b>${s.copy.t.replace(/<[^>]+>/g,'')}</b><span>${s.copy.k}</span></button>`).join('');
+$$('#ovGrid button').forEach((b,i) => b.onclick = () => { toggleOv(false); go(i); });
+$('#agenda').innerHTML = SL.filter(s => s.kind==='action').map(s => `<span>${s.copy.num} ${s.nav}</span>`).join('');
+function toggleOv(on){ $('#ov').classList.toggle('on', on ?? !$('#ov').classList.contains('on')); }
+$('#next').onclick = next; $('#prev').onclick = prev;
+$('#zoomBtn').onclick = () => setZoomed(!zoomed);
+$('#replayBtn').onclick = () => go(cur);
+$('#tryBtn').onclick = () => setTry(!trying);
+$('#autoBtn').onclick = () => setAuto(!auto);
+$('#ovBtn').onclick = () => toggleOv(true); $('#ovClose').onclick = () => toggleOv(false);
+$('#fsBtn').onclick = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+document.addEventListener('click', e => { if (e.target.closest('[data-next]')) next(); });
+addEventListener('keydown', e => {
+  if ($('#ov').classList.contains('on')){ if (e.key==='Escape' || e.key==='o' || e.key==='O') toggleOv(false); return; }
+  const k = e.key;
+  if (['ArrowRight','PageDown',' '].includes(k)){ e.preventDefault(); next(); }
+  else if (['ArrowLeft','PageUp'].includes(k)){ e.preventDefault(); prev(); }
+  else if (k==='z' || k==='Z'){ if (SL[cur].kind==='action') setZoomed(!zoomed); }
+  else if (k==='r' || k==='R'){ go(cur); }
+  else if (k==='t' || k==='T'){ if (SL[cur].kind==='action') setTry(!trying); }
+  else if (k==='p' || k==='P'){ setAuto(!auto); }
+  else if (k==='o' || k==='O'){ toggleOv(true); }
+  else if (k==='f' || k==='F'){ $('#fsBtn').click(); }
+  else if (k==='Home'){ go(0); }
+});
+addEventListener('resize', () => { if (!camState) return; applyCam(lastRect && zoomed && !trying && SL[cur].kind==='action' ? rectCam(lastRect) : fullCam(), 0); if (lastRect && ring.classList.contains('on')) showRing(lastRect, lastLabel); });
+
+/* boot */
+site.src = 'index.html?v=' + Date.now();
+setSize(1440, 900); applyCam(fullCam(), 0);
+const startAt = Math.max(0, (parseInt(location.hash.slice(1)) || 1) - 1);
+go(startAt);
+})();
+</script>
+</body>
+</html>
